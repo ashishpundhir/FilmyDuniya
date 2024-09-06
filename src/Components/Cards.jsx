@@ -3,6 +3,8 @@ import { ThreeDots } from "react-loader-spinner";
 import ReactStars from "react-stars";
 import { moviesRef } from "../firebase/firebase";
 import { getDocs } from "firebase/firestore";
+import { Link } from "react-router-dom";
+
 
 const Cards = () => {
   const [data, setData] = useState([]);
@@ -14,7 +16,7 @@ const Cards = () => {
       const _data = await getDocs(moviesRef);
       console.log(_data);
       _data.forEach((doc) => {
-        setData((prev) => [...prev, doc.data()]);
+        setData((prev) => [...prev, {...(doc.data()), id: doc.id}]);
       });
       setLoading(false);
     }
@@ -31,6 +33,7 @@ const Cards = () => {
       ) : (
         data.map((e, i) => {
           return (
+           <Link to={`/detail/${e.id}`}>
             <div
               key={e.i}
               className="card shadow-lg  hover:-translate-y-2 transition-all duration-500 mt-5 p-2 md:p-1 max-md:w-70 "
@@ -57,7 +60,7 @@ const Cards = () => {
                 <span className="text-yellow-600 font-bold">Year:</span>
                 {e.year}
               </h1>
-            </div>
+            </div></Link>
           );
         })
       )}
